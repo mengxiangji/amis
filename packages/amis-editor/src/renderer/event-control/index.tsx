@@ -44,7 +44,6 @@ import {i18n as _i18n} from 'i18n-runtime';
 import type {VariableItem} from 'amis-ui/lib/components/formula/Editor';
 import {reaction} from 'mobx';
 import {updateComponentContext} from 'amis-editor-core';
-console.log(11111);
 interface EventControlProps extends FormControlProps {
   actions: PluginActions; // 组件的动作列表
   events: PluginEvents; // 组件的事件列表
