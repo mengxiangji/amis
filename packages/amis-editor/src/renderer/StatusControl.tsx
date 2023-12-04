@@ -73,9 +73,8 @@ export class StatusControl extends React.Component<
     if (noBulkChange && noBulkChangeData) {
       ctx = noBulkChangeData;
     }
-
     if (ctx[expressionName] || ctx[expressionName] === '') {
-      formData.statusType = 2;
+      formData.statusType = ctx[expressionName].includes('permission') ? 3 : 2;
       formData.expression = ctx[expressionName];
     }
     return {
@@ -116,6 +115,9 @@ export class StatusControl extends React.Component<
           case 2:
             newData[expressionName] = expression;
             break;
+          case 3:
+            newData[expressionName] = expression;
+            break;
         }
       }
       !noBulkChange && onBulkChange && onBulkChange(newData);
@@ -131,7 +133,6 @@ export class StatusControl extends React.Component<
       [name]: undefined,
       [expressionName]: undefined
     };
-
     this.setState({formData: values});
 
     switch (values.statusType) {
@@ -140,6 +141,11 @@ export class StatusControl extends React.Component<
         break;
       case 2:
         data[expressionName] = values.expression;
+        break;
+      case 3:
+        data[expressionName] = values.expression
+          ? `\${permission.${values.expression}}`
+          : values.expression;
         break;
     }
     !noBulkChange && onBulkChange && onBulkChange(data);
@@ -217,15 +223,28 @@ export class StatusControl extends React.Component<
                   {
                     label: '表达式',
                     value: 2
+                  },
+                  {
+                    label: '关联权限',
+                    value: 3
                   }
                 ]
               },
+
               getSchemaTpl('expressionFormulaControl', {
                 evalMode: false,
                 label: '表达式',
                 name: 'expression',
                 placeholder: `请输入${label}条件`,
                 visibleOn: 'this.statusType === 2',
+                onChange: (value: any) => {}
+              }),
+              getSchemaTpl('permissionControl', {
+                evalMode: false,
+                label: '权限',
+                name: 'expression',
+                placeholder: `请输入${label}条件`,
+                visibleOn: 'this.statusType === 3',
                 onChange: (value: any) => {}
               })
             ]

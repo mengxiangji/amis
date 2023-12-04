@@ -142,6 +142,14 @@ setSchemaTpl('expressionFormulaControl', (schema: object = {}) => {
   };
 });
 
+setSchemaTpl('permissionControl', (schema: object = {}) => {
+  return {
+    type: 'ae-permissionControl',
+    variableMode: 'tree',
+    ...schema
+  };
+});
+
 setSchemaTpl('textareaFormulaControl', (schema: object = {}) => {
   return {
     type: 'ae-textareaFormulaControl',

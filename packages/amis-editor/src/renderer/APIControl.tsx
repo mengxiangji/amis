@@ -181,7 +181,6 @@ export default class APIControl extends React.Component<
 
   constructor(props: APIControlProps) {
     super(props);
-
     this.state = {
       apiStr: this.transformApi2Str(props.value),
       selectedItem: [],
@@ -275,7 +274,6 @@ export default class APIControl extends React.Component<
 
       if (items.length) {
         const selectedItem = items.find(item => item.key === apiKey);
-
         this.setState({selectedItem: selectedItem ? [selectedItem] : []});
       }
     }
@@ -518,8 +516,7 @@ export default class APIControl extends React.Component<
   }
 
   renderApiConfigTabs(submitOnChange: boolean = false) {
-    const {messageDesc, debug = false, name} = this.props;
-
+    const {messageDesc, debug = false, name, flowPath} = this.props;
     return {
       type: 'form',
       className: 'ae-ApiControl-form AMISCSSWrapper',
@@ -528,6 +525,10 @@ export default class APIControl extends React.Component<
       wrapWithPanel: false,
       onSubmit: this.handleSubmit,
       debug,
+      data: {
+        apiSource: 'a',
+        flowPath
+      },
       body: [
         {
           type: 'tabs',
@@ -543,6 +544,7 @@ export default class APIControl extends React.Component<
                   value: 'get',
                   type: 'button-group-select',
                   mode: 'horizontal',
+                  disabledOn: "${apiSource == 'a'}",
                   options: [
                     {
                       value: 'get',
@@ -567,13 +569,83 @@ export default class APIControl extends React.Component<
                   ]
                 },
                 {
-                  label: '接口地址',
-                  type: 'input-text',
-                  name: 'url',
-                  mode: 'horizontal',
-                  size: 'lg',
-                  placeholder: 'http://',
-                  required: true
+                  type: 'flex',
+                  justify: 'flex-start',
+                  items: [
+                    {
+                      label: '接口地址',
+                      type: 'input-text',
+                      name: 'url',
+                      mode: 'horizontal',
+                      size: 'lg',
+                      placeholder: 'http://',
+                      required: true,
+                      visibleOn: "${apiSource == 'b' && !flowPath}"
+                    },
+                    {
+                      label: '接口地址',
+                      type: 'select',
+                      name: 'url',
+                      mode: 'horizontal',
+                      size: 'lg',
+                      placeholder: 'http://',
+                      required: true,
+                      visibleOn: "${apiSource == 'a' && !flowPath}",
+                      options: [
+                        {
+                          label: '获取人员信息',
+                          value: 'https://aisuda.bce.baidu.com/amis/api/sample',
+                          method: 'get'
+                        },
+                        {
+                          label: '获取部门信息',
+                          value:
+                            'https://aisuda.bce.baidu.com/amis/api/sample1',
+                          method: 'post'
+                        }
+                      ],
+                      autoFill: {
+                        method: '${method}'
+                      }
+                    },
+                    {
+                      label: '流程',
+                      type: 'select',
+                      name: 'url',
+                      mode: 'horizontal',
+                      size: 'lg',
+                      placeholder: 'http://',
+                      required: true,
+                      options: [
+                        {
+                          label: '开启请假流程',
+                          value: 'http://user/getUser'
+                        },
+                        {
+                          label: '获取部门信息',
+                          value: 'http://dept/getDept'
+                        }
+                      ],
+                      visibleOn: '${flowPath}'
+                    },
+                    {
+                      label: '',
+                      type: 'select',
+                      name: 'apiSource',
+                      options: [
+                        {
+                          label: '内部api',
+                          value: 'a'
+                        },
+                        {
+                          label: '外部接口',
+                          value: 'b'
+                        }
+                      ],
+                      mode: 'inline',
+                      visibleOn: '${!flowPath}'
+                    }
+                  ]
                 },
                 {
                   label: '发送条件',

@@ -457,6 +457,39 @@ setSchemaTpl('apiControl', (patch: any = {}) => {
   };
 });
 
+setSchemaTpl('dataSourceControl', (patch: any = {}) => {
+  const {name, label, value, description, sampleBuilder, apiDesc, ...rest} =
+    patch;
+
+  return {
+    type: 'ae-dataSourceControl',
+    label,
+    name: name || 'dataSdource',
+    description,
+    labelRemark: sampleBuilder
+      ? {
+          label: false,
+          title: '接口返回示例',
+          icon: 'fas fa-code',
+          className: 'm-l-xs ae-ApiSample-icon',
+          tooltipClassName: 'ae-ApiSample-tooltip',
+          children: (data: any) => (
+            <Html
+              className="ae-ApiSample"
+              inline={false}
+              html={`
+                  <pre><code>${sampleBuilder(data)}</code></pre>
+                  `}
+            />
+          ),
+          trigger: 'click',
+          rootClose: true,
+          placement: 'left'
+        }
+      : undefined,
+    ...rest
+  };
+});
 setSchemaTpl(
   'interval',
   (config?: {

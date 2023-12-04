@@ -51,6 +51,9 @@ import './renderer/InputRangeValueControl';
 import './renderer/FunctionEditorControl';
 import './renderer/ListItemControl';
 
+import './renderer/PermissionControl'; // 关联权限
+import './renderer/DataSourceControl'; // 数据源渲染器
+
 import 'amis-theme-editor/lib/locale/zh-CN';
 import 'amis-theme-editor/lib/locale/en-US';
 import 'amis-theme-editor/lib/renderers/Border';

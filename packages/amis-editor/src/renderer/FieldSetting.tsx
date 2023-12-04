@@ -227,6 +227,16 @@ export class FieldSetting extends React.Component<
           error.message ?? 'API返回格式不正确，请查看接口响应格式要求'
         );
       }
+    } else if (scaffoldData?.listApi.field) {
+      fields = scaffoldData?.listApi.field.map((item: RowData) => {
+        return {
+          label: item.label,
+          name: item.name,
+          displayType: 'tpl',
+          inputType: item.inputType,
+          checked: true
+        };
+      });
     } else {
       const schemaFilter = manager?.store?.schemaFilter;
 
@@ -339,7 +349,14 @@ export class FieldSetting extends React.Component<
 
   @autobind
   renderFooter() {
-    const {classnames: cx, renderer, store, data: ctx, feat} = this.props;
+    const {
+      classnames: cx,
+      renderer,
+      store,
+      data: ctx,
+      feat,
+      field
+    } = this.props;
     const scaffoldData = store?.data;
     const {initApi, listApi} = scaffoldData || {};
     const {loading} = this.state;
@@ -357,23 +374,43 @@ export class FieldSetting extends React.Component<
           ['ae-FieldSetting-footer--form']: isForm
         })}
       >
-        <Button
-          size="sm"
-          level="link"
-          loading={loading}
-          disabled={!isApiValid || loading}
-          disabledTip={{
-            content: loading
-              ? '数据处理中...'
-              : isForm
-              ? '请先填写初始化接口'
-              : '请先填写接口',
-            tooltipTheme: 'dark'
-          }}
-          onClick={this.debounceGenerateFields}
-        >
-          <span>基于接口自动生成字段</span>
-        </Button>
+        {fieldApi && fieldApi.field ? (
+          <Button
+            size="sm"
+            level="link"
+            loading={loading}
+            disabled={!(fieldApi && fieldApi.field) || loading}
+            disabledTip={{
+              content: loading
+                ? '数据处理中...'
+                : isForm
+                ? '请先选择数据源'
+                : '请先选择数据源',
+              tooltipTheme: 'dark'
+            }}
+            onClick={this.debounceGenerateFields}
+          >
+            <span>基于数据源自动生成字段</span>
+          </Button>
+        ) : (
+          <Button
+            size="sm"
+            level="link"
+            loading={loading}
+            disabled={!isApiValid || loading}
+            disabledTip={{
+              content: loading
+                ? '数据处理中...'
+                : isForm
+                ? '请先填写初始化接口'
+                : '请先填写接口',
+              tooltipTheme: 'dark'
+            }}
+            onClick={this.debounceGenerateFields}
+          >
+            <span>基于接口自动生成字段</span>
+          </Button>
+        )}
       </div>
     ) : null;
   }
